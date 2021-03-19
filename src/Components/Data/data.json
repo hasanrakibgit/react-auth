@@ -1,0 +1,25 @@
+[{
+    "id": 1,
+    "transportType": "Bike",
+    "rent": "200",
+    "capacity": "2",
+    "image": "https://i.ibb.co/ySPBR4r/Frame.png"
+  }, {
+    "id": 2,
+    "transportType": "Car",
+    "rent": "600",
+    "capacity": "4",
+    "image": "https://i.ibb.co/XyYGWCq/Frame-2.png"
+  }, {
+    "id": 3,
+    "transportType": "Bus",
+    "rent": "20",
+    "capacity": "40",
+    "image": "https://i.ibb.co/n7PVyyf/Frame-1.png"
+  }, {
+    "id": 4,
+    "transportType": "Train",
+    "rent": "50",
+    "capacity": "500",
+    "image": "https://i.ibb.co/Y0dGzh4/Group.png"
+  }]
