@@ -12,6 +12,7 @@ import Nomatch from './Components/Nomatch/Nomatch';
 import Destination from './Components/Destination/Destination';
 import Login from './Components/Login/Login';
 import PrivateRoute from './Components/Private Route/PrivateRoute';
+import Header from './Components/Header/Header';
 
  export const UserContext = createContext();
 
@@ -22,6 +23,7 @@ function App() {
     <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <p>Name: {loggedInUser.name}</p>
     <Router>
+      <Header></Header>
       <Switch>
         <Route exact path="/">
           <Home></Home>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from './firebase.config';
@@ -18,20 +18,21 @@ const Login = () => {
     const history = useHistory();
     const location = useLocation();
     const { from } = location.state || { from: { pathname: "/" } };
-
+    const [newUser, setNewUser] = useState(true);
+    const [user, setUser] = useState({
+        isSignedIn: false,
+        name: '',
+        email: '',
+        password: '',
+    });
 
     const handleGoogleSignIn = () => {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth()
             .signInWithPopup(provider)
             .then((result) => {
-
                 const { displayName, email } = result.user;
-                const signedInUser = {
-                    isSignedIn: true,
-                    name: displayName,
-                    email: email
-                };
+                const signedInUser = { name: displayName, email };
                 setLoggedInUser(signedInUser)
                 history.replace(from);
             }).catch((error) => {
@@ -39,22 +40,7 @@ const Login = () => {
                 console.log(errorMessage)
             });
     }
-    const handleGoogleSignOut = () => {
-        firebase.auth().signOut()
-            .then(result => {
-                const signedOutUser = {
-                    isSignedIn: false,
-                    name: ' ',
-                    email: ' ',
-                    password: ' ',
-                    error: ' ',
-                    success: false,
-                }
-                setLoggedInUser(signedOutUser);
-            }).catch(error => {
 
-            });
-    }
     const handleBlur = (e) => {
         let isFieldValid = true;
         if (e.target.name === 'email') {
@@ -67,51 +53,77 @@ const Login = () => {
             isFieldValid = isPasswordValid && passwordHasNumber
         }
         if (isFieldValid) {
-            const newUserInfo = { ...loggedInUser };
+            const newUserInfo = { ...user };
             newUserInfo[e.target.name] = e.target.value;
-            setLoggedInUser(newUserInfo);
+            setUser(newUserInfo);
         }
     }
     const handleSubmit = (e) => {
-        if (loggedInUser.email && loggedInUser.password) {
-            firebase.auth().createUserWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
+        if (newUser && user.email && user.password) {
+            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
                 .then((result) => {
-                    const newUserInfo = { ...loggedInUser };
+                    const newUserInfo = { ...user };
                     newUserInfo.error = '';
-                    newUserInfo.success= true;
-                    setLoggedInUser(newUserInfo);
+                    newUserInfo.success = true;
+                    setUser(newUserInfo);
+                    updateUserName(user.name);
                 })
                 .catch((error) => {
-                    const newUserInfo = { ...loggedInUser };
-                    newUserInfo.error= error.message;
-                    newUserInfo.success= false;
-                    setLoggedInUser(newUserInfo);
+                    const newUserInfo = { ...user };
+                    newUserInfo.error = error.message;
+                    newUserInfo.success = false;
+                    setUser(newUserInfo);
                 });
 
         }
+        if (!newUser && user.email && user.password) {
+            firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+                .then((result) => {
+                    const newUserInfo = { ...user };
+                    newUserInfo.error = '';
+                    newUserInfo.success = true;
+                    setUser(newUserInfo); 
+                    console.log('sign in user info', result.user);
+                })
+                .catch((error) => {
+                    const newUserInfo = { ...user };
+                    newUserInfo.error = error.message;
+                    newUserInfo.success = false;
+                    setUser(newUserInfo);
+                });
+        }
         e.preventDefault();
-    }
+    };
+    const updateUserName = name =>{
+       const user = firebase.auth().currentUser;
+
+       user.updateProfile({
+        displayName: name,
+       
+      }).then(function() {
+        console.log ("update")
+      }).catch(function(error) {
+        console.log("error")
+      });
+    };
+
     return (
         <div className="App">
             <h1>Create an Account</h1>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="name" onBlur={handleBlur} placeholder="Name" required /><br />
+                {newUser && <input type="text" name="name" onBlur={handleBlur} placeholder="Name" required />}<br />
                 <input type="email" name="email" onBlur={handleBlur} placeholder="Username or Email" required /><br />
                 <input type="password" name="password" onBlur={handleBlur} placeholder="password" required /><br />
                 <input type="password" name="confirmPassword" onBlur={handleBlur} placeholder="Confirm Password" required /><br />
-                <input type="submit" value="Create an Account" />
+                <input type="submit" value={newUser ?"Create an Account" : "Login" }/>
             </form>
-            <p style={{color:'red'}}>{loggedInUser.error}</p>
-            {loggedInUser.success && <p style={{color:'green'}}>User Created Successfully</p> }
-            <h1>This is Login</h1>
-            {
-                loggedInUser.isSignedIn ? <button onClick={handleGoogleSignOut}>Sign out from Google</button> :
-                    <button onClick={handleGoogleSignIn}>Sign in by Google</button>
-            }
-
+            <h4>Already Have an account?<a onClick={() => setNewUser(!newUser)} href="#"> Login</a> </h4>
+            <p style={{ color: 'red' }}>{user.error}</p>
+            {user.success && <p style={{ color: 'green' }}>User {newUser ? "Created" : "Logged In"} Successfully</p>}
+            <h1>OR</h1>
+            <button onClick={handleGoogleSignIn}>Continue with Google</button>
 
         </div>
     );
 };
-
 export default Login;
