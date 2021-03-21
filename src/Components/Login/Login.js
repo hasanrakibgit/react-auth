@@ -109,6 +109,7 @@ const Login = () => {
 
     return (
         <div className="App">
+            <div className="login-form">
             <h1>Create an Account</h1>
             <form onSubmit={handleSubmit}>
                 {newUser && <input type="text" name="name" onBlur={handleBlur} placeholder="Name" required />}<br />
@@ -121,8 +122,8 @@ const Login = () => {
             <p style={{ color: 'red' }}>{user.error}</p>
             {user.success && <p style={{ color: 'green' }}>User {newUser ? "Created" : "Logged In"} Successfully</p>}
             <h1>OR</h1>
-            <button onClick={handleGoogleSignIn}>Continue with Google</button>
-
+            <button className="login-btn" onClick={handleGoogleSignIn}>Continue with Google</button>
+            </div>
         </div>
     );
 };
