@@ -10,7 +10,8 @@ import vData from "../Data/data.json";
 
 const DestinationForm = () => {
     const { id } = useParams();
-    
+    const [show, setShow] = useState(false);
+
     const [vehicles, setVehicles] = useState([]);
     useEffect(() => {
         setVehicles(vData);
@@ -29,15 +30,44 @@ const DestinationForm = () => {
                     <input type="text" name="name" placeholder="Please Type" /><br />
                     <label>Pick Date</label><br />
                     <input type="date" /><br />
-                    <button type="submit">Search</button>
+
                 </form>
+                <button onClick={() => setShow(!show)}>Search</button>
+                {
+                    show ?
+                        <div style={{ display: "flex", border: "1px solid black", marginTop: "20px", backgroundColor:"white"}}>
+                            <img style={{ width: "70px", height: "40px", marginTop: "10px" }} src={vehicleDetails?.image} alt="" />
+                            <h5 style={{ marginLeft: "10px", marginRight: "10px" }}>{vehicleDetails?.transportType}</h5>
+                            <img style={{ width: "25px", height: "25px", marginTop: "20px" }} src={sample} alt="" />
+                            <h5>{vehicleDetails?.capacity}</h5>
+                            <h5 style={{ marginLeft: "30px" }}>BDT :{vehicleDetails?.rent}</h5>
+                        </div> : null
+
+
+                }
+                {
+                   show ?
+                   <div style={{ display: "flex", border: "1px solid black", marginTop: "20px",backgroundColor:"white" }}>
+                       <img style={{ width: "70px", height: "40px", marginTop: "10px" }} src={vehicleDetails?.image} alt="" />
+                       <h5 style={{ marginLeft: "10px", marginRight: "10px" }}>{vehicleDetails?.transportType}</h5>
+                       <img style={{ width: "25px", height: "25px", marginTop: "20px" }} src={sample} alt="" />
+                       <h5>{vehicleDetails?.capacity}</h5>
+                       <h5 style={{ marginLeft: "30px" }}>BDT :{vehicleDetails?.rent}</h5>
+                   </div> : null 
+                }
+                {
+                    show ?
+                    <div style={{ display: "flex", border: "1px solid black", marginTop: "20px",backgroundColor:"white" }}>
+                        <img style={{ width: "70px", height: "40px", marginTop: "10px" }} src={vehicleDetails?.image} alt="" />
+                        <h5 style={{ marginLeft: "10px", marginRight: "10px" }}>{vehicleDetails?.transportType}</h5>
+                        <img style={{ width: "25px", height: "25px", marginTop: "20px" }} src={sample} alt="" />
+                        <h5>{vehicleDetails?.capacity}</h5>
+                        <h5 style={{ marginLeft: "30px" }}>BDT :{vehicleDetails?.rent}</h5>
+                    </div> : null
+                }
+
             </div>
-            <div >
-                <img src={vehicleDetails?.image} alt="" />
-                <h1>BDT :{vehicleDetails?.rent}</h1>
-                <img src={sample} alt="" />
-                <h1>Total Seat:{vehicleDetails?.capacity}</h1>
-            </div>
+
         </div>
     );
 };

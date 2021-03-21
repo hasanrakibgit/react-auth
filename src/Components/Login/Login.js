@@ -63,13 +63,15 @@ const Login = () => {
         if (newUser && user.email && user.password) {
             firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
                 .then((result) => {
-                    const newUserInfo = { ...result.user };
+                    const newUserInfo = { ...user };
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
+                   
                     console.log(from)
                     updateUserName(user.name);
                     
+                    console.log('sign in user info', result.user);
                     history.replace(from);
                    
                 })
@@ -78,6 +80,7 @@ const Login = () => {
                     newUserInfo.error = error.message;
                     newUserInfo.success = false;
                     setUser(newUserInfo);
+                    
                 });
 
         }
@@ -88,6 +91,7 @@ const Login = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo); 
+                   
                     history.replace(from);
                     
                     console.log('sign in user info', result.user);
