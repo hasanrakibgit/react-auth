@@ -59,14 +59,19 @@ const Login = () => {
         }
     }
     const handleSubmit = (e) => {
+        e.preventDefault();
         if (newUser && user.email && user.password) {
             firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
                 .then((result) => {
-                    const newUserInfo = { ...user };
+                    const newUserInfo = { ...result.user };
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
+                    console.log(from)
                     updateUserName(user.name);
+                    
+                    history.replace(from);
+                   
                 })
                 .catch((error) => {
                     const newUserInfo = { ...user };
@@ -83,6 +88,8 @@ const Login = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo); 
+                    history.replace(from);
+                    
                     console.log('sign in user info', result.user);
                 })
                 .catch((error) => {
@@ -92,7 +99,7 @@ const Login = () => {
                     setUser(newUserInfo);
                 });
         }
-        e.preventDefault();
+        
     };
     const updateUserName = name =>{
        const user = firebase.auth().currentUser;
